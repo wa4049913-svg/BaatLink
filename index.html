@@ -11,12 +11,12 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-:root{--bg:#f4f5fb;--cd:#fff;--tx:#14172b;--dim:#6b7280;--ac:#4f46e5;--as:#eceafe;--bd:#e6e8f0;--dg:#e11d48;color-scheme:light dark}
-@media(prefers-color-scheme:dark){:root{--bg:#0c0e1d;--cd:#151832;--tx:#eef0ff;--dim:#9aa0c3;--as:#23275a;--bd:#262a52}}
+:root{--bg:#f4f5fb;--cd:#fff;--tx:#14172b;--dim:#6b7280;--ac:#4f46e5;--as:#eceafe;--bd:#e6e8f0;--dg:#e11d48;color-scheme:light}
+:root.dark{--bg:#0c0e1d;--cd:#151832;--tx:#eef0ff;--dim:#9aa0c3;--as:#23275a;--bd:#262a52;color-scheme:dark}
 html,body{height:100%}
-body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top)}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top);transition:background .2s,color .2s}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-input,textarea{font:inherit;color:inherit;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;width:100%;outline:0;resize:none;margin-bottom:10px}
+input,textarea{font:inherit;color:inherit;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;width:100%;outline:0;resize:none;margin-bottom:10px;transition:background .2s,border-color .2s}
 input:focus,textarea:focus{border-color:var(--ac)}
 label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weight:600}
 .chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx);margin:6px 0 12px}.chk input{width:auto;margin:0}
@@ -27,7 +27,7 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .card h1{font-size:24px;margin-bottom:4px}.card p{color:var(--dim);margin-bottom:16px}
 .center{min-height:100dvh;display:grid;place-items:center;padding:20px;text-align:center}
 .av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-weight:700;flex-shrink:0}
-.top{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--cd);border-bottom:1px solid var(--bd);flex-shrink:0}
+.top{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--cd);border-bottom:1px solid var(--bd);flex-shrink:0;transition:background .2s,border-color .2s}
 .top small{display:block;color:var(--dim);font-size:12.5px}
 .col{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto;background:var(--bg)}
 .msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:0}
@@ -35,14 +35,15 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .b.me{align-self:flex-end;background:var(--ac);color:#fff;border-bottom-right-radius:4px}
 .b.yo{align-self:flex-start;background:var(--cd);border:1px solid var(--bd);border-bottom-left-radius:4px}
 .b small{display:block;font-size:11px;opacity:.65;text-align:right;margin-top:2px}
-.bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--cd);border-top:1px solid var(--bd);flex-shrink:0}
+.bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--cd);border-top:1px solid var(--bd);flex-shrink:0;transition:background .2s}
 .bar input,.bar textarea{margin:0}
 .row{display:flex;gap:8px;align-items:flex-end}
 .send{background:var(--ac);color:#fff;width:44px;height:44px;border-radius:50%;flex-shrink:0;font-size:18px}.send:disabled{opacity:.4}
 .banner{background:var(--as);color:var(--ac);padding:9px 14px;font-size:13px;flex-shrink:0}.banner.w{background:#fee2e2;color:#b91c1c}
+:root.dark .banner.w{background:#3b0d15;color:#fca5a5}
 .hint{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px}
 #app{display:grid;grid-template-columns:380px 1fr;height:100dvh}
-.side{display:flex;flex-direction:column;background:var(--cd);border-right:1px solid var(--bd);min-height:0}
+.side{display:flex;flex-direction:column;background:var(--cd);border-right:1px solid var(--bd);min-height:0;transition:background .2s,border-color .2s}
 .pane{display:flex;flex-direction:column;min-height:0;background:var(--bg)}
 .lk{padding:12px 16px;border-bottom:1px solid var(--bd)}.lkt{font-size:13px;background:var(--as);color:var(--ac);padding:8px 12px;border-radius:10px;word-break:break-all}
 .lk .row{margin-top:8px}.lk .btn{padding:8px 12px;font-size:13.5px}
@@ -61,9 +62,15 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .mb{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:grid;place-items:center;padding:16px}
 .md{background:var(--cd);border-radius:20px;padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}.md h2{margin-bottom:12px}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:12px;z-index:99;max-width:90vw;font-size:14px}
+/* Dark mode toggle button */
+.themeBtn{position:fixed;top:calc(8px + env(safe-area-inset-top));right:8px;z-index:60;background:var(--cd);border:1px solid var(--bd);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+.themeBtn:hover{background:var(--as)}
+@media(max-width:800px){.themeBtn{top:auto;bottom:calc(16px + env(safe-area-inset-bottom));right:16px}}
 </style>
 </head>
 <body>
+
+<button class="themeBtn" id="themeBtn" onclick="toggleTheme()" title="Theme badlein">🌙</button>
 
 <section id="cfg" class="center hide"><div class="card"><h1>⚙️ Setup baqi hai</h1><p>index.html mein <b>const FB</b> ke andar apne naye Firebase project ki config paste karein.</p></div></section>
 
@@ -122,7 +129,26 @@ const FB={apiKey: "AIzaSyAGH4qrPzxelhM0KUM1nBNfLBUZ2ABlmcs",
   appId: "1:375018345453:web:6e4620fcdb2d334f1c4de4"
 };
 
+/* ================= THEME ================= */
+(function(){
+  const saved=localStorage.getItem('bl_theme');
+  const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
+  const isDark = saved ? saved==='dark' : prefersDark;
+  if(isDark) document.documentElement.classList.add('dark');
+  document.addEventListener('DOMContentLoaded',()=>{
+    const b=document.getElementById('themeBtn');
+    if(b) b.textContent=isDark?'☀️':'🌙';
+  });
+})();
+function toggleTheme(){
+  const root=document.documentElement;
+  const nowDark=root.classList.toggle('dark');
+  localStorage.setItem('bl_theme', nowDark?'dark':'light');
+  const b=document.getElementById('themeBtn');
+  if(b) b.textContent=nowDark?'☀️':'🌙';
+}
 
+/* ================= HELPERS ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const LS={g:(k,d)=>{try{const v=localStorage.getItem('bl_'+k);return v?JSON.parse(v):d}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem('bl_'+k,JSON.stringify(v))}catch(e){}}};
@@ -137,8 +163,13 @@ function closeM(){$('#modal').innerHTML=''}
 function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.25);o.start();o.stop(a.currentTime+.25)}catch(e){}}
 const isActive=s=>{if(!s)return false;const n=Date.now();return !!((s.paidUntil&&ms(s.paidUntil)>n)||ms(s.createdAt)+14*864e5>n)};
 const SLUG=(new URLSearchParams(location.search).get('c')||'').toLowerCase().replace(/[^a-z0-9-]/g,'');
-let db,auth,seller=null,slug=null;
 
+/* ================= STATE (TDZ FIX: pehle declare karein) ================= */
+let db,auth,seller=null,slug=null;
+let chat=null,cid,cref,gname=LS.g('name',''),lastS=0;   // buyer
+let chats={},tab='req',cur=null,unM=null,lastUn=0;      // seller
+
+/* ================= FIREBASE INIT ================= */
 if(FB.apiKey.startsWith('PASTE'))show('cfg');
 else{firebase.initializeApp(FB);auth=firebase.auth();db=firebase.firestore();SLUG?guestMode():sellerMode()}
 
@@ -146,8 +177,8 @@ function enterSend(el,fn){el.addEventListener('keydown',e=>{if(e.key==='Enter'&&
 enterSend($('#gi'),()=>gSend());enterSend($('#ci'),()=>reply());
 
 /* ================= BUYER (guest) ================= */
-let chat=null,cid,cref,gname=LS.g('name',''),lastS=0;
 function anon(){return new Promise((res,rej)=>{const un=auth.onAuthStateChanged(u=>{un();u?res(u):auth.signInAnonymously().then(c=>res(c.user)).catch(rej)})})}
+
 async function guestMode(){
   show('g');$('#gn').value=gname;
   try{
@@ -160,6 +191,7 @@ async function guestMode(){
     cref.collection('msgs').orderBy('ts').onSnapshot(s=>gMsgs(s.docs.map(d=>d.data({serverTimestamps:'estimate'}))),e=>console.error(e));
   }catch(e){toast('Connection mein masla: '+(e.code||e.message))}
 }
+
 function gState(){
   const ok=!!(seller.open&&isActive(seller));let b='',can=true;
   const lim=chat&&chat.status==='open'?300:3;
@@ -171,11 +203,13 @@ function gState(){
   $('#gb').textContent=b;$('#gb').classList.toggle('hide',!b);
   $('#gi').disabled=$('#gsb').disabled=!can;$('#gn').classList.toggle('hide',!!chat);
 }
+
 function gMsgs(list){
   const box=$('#gm');let h=seller.greeting?`<div class="b yo">${esc(seller.greeting)}</div>`:'';
   h+=list.map(m=>`<div class="b ${m.from==='g'?'me':'yo'}">${esc(m.text)}<small>${tm(m.ts)}</small></div>`).join('');
   box.innerHTML=h;box.scrollTop=box.scrollHeight;
 }
+
 async function gSend(){
   const text=$('#gi').value.trim();
   if(!text||!cref)return;
@@ -210,25 +244,23 @@ async function gSend(){
         us:(chat.us||0)+1
       });
     }
-
     // Step 2: ab message bhejo (chat exist karti hai)
     await cref.collection('msgs').add({
       from:'g',
       text,
       ts:TS()
     });
-
     $('#gi').value='';
   }catch(e){
-    console.error('gSend fail:', e);
+    console.error('gSend fail:',e);
     toast('Message nahi gaya: '+(e.code||e.message));
   }
 }
 
 /* ================= SELLER ================= */
-let chats={},tab='req',cur=null,unM=null,lastUn=0;
 const link=()=>location.origin+location.pathname+'?c='+slug;
 const QR=()=>LS.g('qr',['Ji, batayein?','Price bata deta hoon','Delivery 3 din mein hogi']);
+
 function sellerMode(){
   show('login');
   auth.onAuthStateChanged(async u=>{
@@ -240,7 +272,9 @@ function sellerMode(){
     }catch(e){toast('Error: '+(e.code||e.message))}
   });
 }
+
 function glogin(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>toast(e.code==='auth/popup-closed-by-user'?'Cancel kiya':'Login fail: '+(e.code||e.message)))}
+
 async function mkSeller(){
   const name=$('#stn').value.trim(),id=$('#sti').value;
   if(name.length<2)return toast('Naam likhein');if(id.length<3)return toast('Link ID kam az kam 3 harf ki ho');
@@ -250,6 +284,7 @@ async function mkSeller(){
     slug=id;seller=(await ref.get()).data();startDash();
   }catch(e){toast(e.code==='permission-denied'?'Yeh link ID pehle se kisi ke paas hai':'Error: '+(e.code||e.message))}
 }
+
 function startDash(){
   show('app');$('#sn').textContent=seller.name;$('#sav').textContent=seller.name[0].toUpperCase();$('#lk').textContent=link();planUI();
   db.collection('bl_chats').where('slug','==',slug).onSnapshot(s=>{
@@ -259,18 +294,22 @@ function startDash(){
     renderList();if(cur&&chats[cur]){cvHead();if(chats[cur].us&&!document.hidden)markRead()}
   },e=>toast('Chats load nahi hui: '+(e.code||e.message)));
 }
+
 function planUI(){
   const paid=seller.paidUntil&&ms(seller.paidUntil)>Date.now(),left=Math.ceil((ms(seller.createdAt)+14*864e5-Date.now())/864e5);
   $('#sp').textContent=paid?'Paid • '+new Date(ms(seller.paidUntil)).toLocaleDateString():left>0?'Free trial • '+left+' din baqi':'⚠️ Plan khatam';
   $('#warn').classList.toggle('hide',isActive(seller));
 }
+
 function setTab(t){tab=t;['req','chat','blk'].forEach(x=>$('#t_'+x).classList.toggle('on',x===t));renderList()}
+
 function renderList(){
   const a=Object.values(chats),g={req:a.filter(c=>c.status==='pending'),chat:a.filter(c=>c.status==='open'),blk:a.filter(c=>c.status==='blocked')};
   $('#tr').textContent=g.req.length;$('#tc').textContent=g.chat.length;$('#tb').textContent=g.blk.length;
   const l=g[tab].sort((x,y)=>ms(y.lastAt)-ms(x.lastAt));
   $('#cl').innerHTML=l.length?l.map(c=>`<div class="ci ${cur===c.id?'on':''}" onclick="openC('${c.id}')"><div class="av">${esc((c.gname||'M')[0].toUpperCase())}</div><div class="cm"><div class="r2"><b>${esc(c.gname||'Mehmaan')}</b><small>${dd(c.lastAt)}</small></div><div class="r2"><span class="lt">${esc(c.last||'')}</span>${c.us?`<span class="bd">${c.us}</span>`:''}</div></div></div>`).join(''):'<div class="empty">'+(tab==='req'?'Koi nayi request nahi.<br>Apna link share karein.':'Yahan abhi kuch nahi.')+'</div>';
 }
+
 function openC(id){
   cur=id;$('#app').classList.add('open');$('#np').classList.add('hide');$('#cv').classList.remove('hide');cvHead();
   if(unM)unM();
@@ -280,13 +319,16 @@ function openC(id){
   $('#qrs').innerHTML=QR().map((q,i)=>`<button onclick="reply(QR()[${i}])">${esc(q)}</button>`).join('');
   renderList();markRead();
 }
+
 function closeC(){cur=null;if(unM){unM();unM=null}$('#app').classList.remove('open');$('#cv').classList.add('hide');$('#np').classList.remove('hide');renderList()}
 function markRead(){const c=chats[cur];if(c&&c.us)db.collection('bl_chats').doc(cur).update({us:0}).catch(()=>{})}
+
 function cvHead(){
   const c=chats[cur];if(!c)return;$('#cn').textContent=c.gname||'Mehmaan';$('#cav').textContent=(c.gname||'M')[0].toUpperCase();
   let a=c.status==='pending'?`<button class="btn" onclick="setSt('open')">✅ Accept</button><button class="btn g" onclick="setSt('blocked')">🚫</button>`:c.status==='open'?`<button class="btn g" onclick="setSt('blocked')">🚫 Block</button>`:`<button class="btn" onclick="setSt('open')">Unblock</button>`;
   $('#ca').innerHTML=a+`<button class="btn g" onclick="delC()">🗑️</button>`;$('#ci').disabled=c.status==='blocked';
 }
+
 async function reply(txt){
   const c=chats[cur];if(!c||c.status==='blocked')return;const text=(txt||$('#ci').value).trim();if(!text)return;
   const cr=db.collection('bl_chats').doc(cur),b=db.batch();
@@ -294,14 +336,18 @@ async function reply(txt){
   b.update(cr,{last:text.slice(0,60),lastAt:TS(),ug:(c.ug||0)+1,status:'open'});
   try{await b.commit();$('#ci').value=''}catch(e){toast('Nahi gaya: '+(e.code||e.message))}
 }
+
 async function setSt(s){try{await db.collection('bl_chats').doc(cur).update({status:s});if(s==='blocked')toast('Buyer block ho gaya')}catch(e){toast('Error: '+(e.code||e.message))}}
+
 async function delC(){
   if(!confirm('Yeh chat hamesha ke liye delete karein?'))return;
   try{const cr=db.collection('bl_chats').doc(cur),ms_=await cr.collection('msgs').get(),b=db.batch();ms_.forEach(d=>b.delete(d.ref));b.delete(cr);await b.commit();closeC()}catch(e){toast('Delete fail: '+(e.code||e.message))}
 }
+
 function copyL(){navigator.clipboard.writeText(link()).then(()=>toast('Link copy ho gaya ✅'))}
 function shareL(){window.open('https://wa.me/?text='+encodeURIComponent('Mujhe yahan message karein (number ki zaroorat nahi): '+link()),'_blank')}
 function qr(){modal(`<h2>QR code</h2><div style="text-align:center"><img alt="QR" width="220" height="220" style="border-radius:12px;background:#fff;padding:8px" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(link())}"><p class="hint" style="margin:10px 0">Is par screenshot le kar poster ya bill par laga sakte hain.</p></div><button class="btn g w" onclick="closeM()">Close</button>`)}
+
 function settings(){
   modal(`<h2>⚙️ Settings</h2><label>Dukaan ka naam</label><input id="sa" value="${esc(seller.name)}" maxlength="30">
   <label>Pehla jawab (greeting)</label><textarea id="sb" rows="3" maxlength="200">${esc(seller.greeting||'')}</textarea>
@@ -309,6 +355,7 @@ function settings(){
   <label>Quick replies (comma se alag)</label><input id="sq" value="${esc(QR().join(', '))}">
   <button class="btn w" onclick="saveS()">Save</button><button class="btn g w" onclick="auth.signOut().then(()=>location.reload())">Logout</button><button class="btn g w" onclick="closeM()">Close</button>`);
 }
+
 async function saveS(){
   const name=$('#sa').value.trim(),greeting=$('#sb').value.trim(),open=$('#sc').checked;
   if(name.length<2)return toast('Naam likhein');
@@ -319,4 +366,3 @@ async function saveS(){
 </script>
 </body>
 </html>
- 
