@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4f46e5">
+<meta name="robots" content="noindex,nofollow">
+<title>BaatLink</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f4f5fb;--cd:#fff;--tx:#14172b;--dim:#6b7280;--ac:#4f46e5;--as:#eceafe;--bd:#e6e8f0;--dg:#e11d48;color-scheme:light dark}
+@media(prefers-color-scheme:dark){:root{--bg:#0c0e1d;--cd:#151832;--tx:#eef0ff;--dim:#9aa0c3;--as:#23275a;--bd:#262a52}}
+html,body{height:100%}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top)}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input,textarea{font:inherit;color:inherit;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;width:100%;outline:0;resize:none;margin-bottom:10px}
+input:focus,textarea:focus{border-color:var(--ac)}
+label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weight:600}
+.chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx);margin:6px 0 12px}.chk input{width:auto;margin:0}
+.hide{display:none!important}
+.btn{background:var(--ac);color:#fff;font-weight:600;padding:11px 18px;border-radius:12px;display:inline-block}
+.btn.g{background:var(--as);color:var(--ac)}.btn.r{background:var(--dg)}.btn:disabled{opacity:.5}.btn.w{width:100%;margin-top:8px}
+.card{background:var(--cd);border:1px solid var(--bd);border-radius:20px;padding:24px;max-width:400px;width:100%}
+.card h1{font-size:24px;margin-bottom:4px}.card p{color:var(--dim);margin-bottom:16px}
+.center{min-height:100dvh;display:grid;place-items:center;padding:20px;text-align:center}
+.av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-weight:700;flex-shrink:0}
+.top{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--cd);border-bottom:1px solid var(--bd);flex-shrink:0}
+.top small{display:block;color:var(--dim);font-size:12.5px}
+.col{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto;background:var(--bg)}
+.msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:0}
+.b{max-width:80%;padding:8px 12px;border-radius:16px;word-break:break-word;white-space:pre-wrap}
+.b.me{align-self:flex-end;background:var(--ac);color:#fff;border-bottom-right-radius:4px}
+.b.yo{align-self:flex-start;background:var(--cd);border:1px solid var(--bd);border-bottom-left-radius:4px}
+.b small{display:block;font-size:11px;opacity:.65;text-align:right;margin-top:2px}
+.bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--cd);border-top:1px solid var(--bd);flex-shrink:0}
+.bar input,.bar textarea{margin:0}
+.row{display:flex;gap:8px;align-items:flex-end}
+.send{background:var(--ac);color:#fff;width:44px;height:44px;border-radius:50%;flex-shrink:0;font-size:18px}.send:disabled{opacity:.4}
+.banner{background:var(--as);color:var(--ac);padding:9px 14px;font-size:13px;flex-shrink:0}.banner.w{background:#fee2e2;color:#b91c1c}
+.hint{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px}
+#app{display:grid;grid-template-columns:380px 1fr;height:100dvh}
+.side{display:flex;flex-direction:column;background:var(--cd);border-right:1px solid var(--bd);min-height:0}
+.pane{display:flex;flex-direction:column;min-height:0;background:var(--bg)}
+.lk{padding:12px 16px;border-bottom:1px solid var(--bd)}.lkt{font-size:13px;background:var(--as);color:var(--ac);padding:8px 12px;border-radius:10px;word-break:break-all}
+.lk .row{margin-top:8px}.lk .btn{padding:8px 12px;font-size:13.5px}
+.tabs{display:flex;gap:6px;padding:10px 12px}.tabs button{flex:1;padding:8px 4px;border-radius:10px;background:var(--bg);font-weight:600;font-size:13.5px;color:var(--dim)}
+.tabs button.on{background:var(--as);color:var(--ac)}.tabs i{font-style:normal;background:var(--bd);border-radius:9px;padding:0 6px;margin-left:3px;font-size:12px}
+.cl{flex:1;overflow-y:auto;min-height:0}
+.ci{display:flex;gap:12px;padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--bd)}.ci:hover,.ci.on{background:var(--as)}
+.cm{flex:1;min-width:0}.r2{display:flex;justify-content:space-between;gap:8px;align-items:center}
+.cm small{color:var(--dim);font-size:12px}.lt{color:var(--dim);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bd{background:var(--ac);color:#fff;border-radius:10px;min-width:20px;height:20px;display:grid;place-items:center;font-size:12px;font-weight:700;padding:0 6px}
+.empty{padding:40px 24px;text-align:center;color:var(--dim)}
+.qr{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0}.qr button{flex-shrink:0;background:var(--as);color:var(--ac);padding:6px 12px;border-radius:14px;font-size:13px}
+.acts{display:flex;gap:6px}.acts .btn{padding:8px 12px;font-size:13.5px}
+.back{display:none;font-size:22px;padding:0 6px}
+@media(max-width:800px){#app{grid-template-columns:1fr}#app.open .side{display:none}#app:not(.open) .pane{display:none}.back{display:block}}
+.mb{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:grid;place-items:center;padding:16px}
+.md{background:var(--cd);border-radius:20px;padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}.md h2{margin-bottom:12px}
+.toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:12px;z-index:99;max-width:90vw;font-size:14px}
+</style>
+</head>
+<body>
+
+<section id="cfg" class="center hide"><div class="card"><h1>⚙️ Setup baqi hai</h1><p>index.html mein <b>const FB</b> ke andar apne naye Firebase project ki config paste karein.</p></div></section>
+
+<section id="g" class="col hide">
+  <div class="top"><div class="av" id="gav">?</div><div><b id="gt"></b><small>Seller se seedha message karein</small></div></div>
+  <div id="gb" class="banner hide"></div>
+  <div id="gm" class="msgs"></div>
+  <div class="bar">
+    <input id="gn" placeholder="Aap ka naam (optional)" maxlength="24" style="margin-bottom:8px">
+    <div class="row"><textarea id="gi" rows="1" maxlength="500" placeholder="Apna message likhein…"></textarea><button class="send" id="gsb" onclick="gSend()">➤</button></div>
+    <div class="hint">Sirf text message • Number ya sign up ki zaroorat nahi</div>
+  </div>
+</section>
+
+<section id="login" class="center hide"><div class="card">
+  <h1>💬 BaatLink</h1><p>Apna chat link banayein. Buyer bina number aur bina app ke aap ko message kar sakta hai.</p>
+  <button class="btn w" onclick="glogin()">Google se login karein</button>
+  <div class="hint" style="margin-top:14px">Pehle 14 din free</div>
+</div></section>
+
+<section id="setup" class="center hide"><div class="card" style="text-align:left">
+  <h1>Apna link banayein</h1><p>Ye ek baar karna hai.</p>
+  <label>Dukaan / aap ka naam</label><input id="stn" maxlength="30" placeholder="Ali Collection">
+  <label>Link ID (a-z, 0-9, -)</label><input id="sti" maxlength="20" placeholder="ali-collection" autocapitalize="off" spellcheck="false" oninput="this.value=this.value.toLowerCase().replace(/[^a-z0-9-]/g,'')">
+  <button class="btn w" onclick="mkSeller()">Link banayein</button>
+</div></section>
+
+<section id="app" class="hide">
+  <aside class="side">
+    <div class="top"><div class="av" id="sav"></div><div style="flex:1;min-width:0"><b id="sn"></b><small id="sp"></small></div><button class="btn g" onclick="settings()">⚙️</button></div>
+    <div id="warn" class="banner w hide">Plan khatam ho gaya: naye buyers message nahi bhej sakte. Renew ke liye rabta karein.</div>
+    <div class="lk"><div class="lkt" id="lk"></div><div class="row"><button class="btn g" onclick="copyL()">📋 Copy</button><button class="btn g" onclick="shareL()">💬 WhatsApp</button><button class="btn g" onclick="qr()">QR</button></div></div>
+    <div class="tabs"><button id="t_req" class="on" onclick="setTab('req')">Requests<i id="tr">0</i></button><button id="t_chat" onclick="setTab('chat')">Chats<i id="tc">0</i></button><button id="t_blk" onclick="setTab('blk')">Blocked<i id="tb">0</i></button></div>
+    <div id="cl" class="cl"></div>
+  </aside>
+  <main class="pane">
+    <div id="np" class="center"><div class="empty">Koi chat chunein</div></div>
+    <div id="cv" class="hide" style="display:flex;flex-direction:column;flex:1;min-height:0">
+      <div class="top"><button class="back" onclick="closeC()">←</button><div class="av" id="cav"></div><b id="cn" style="flex:1"></b><div class="acts" id="ca"></div></div>
+      <div id="cm" class="msgs"></div>
+      <div class="qr" id="qrs"></div>
+      <div class="bar"><div class="row"><textarea id="ci" rows="1" maxlength="500" placeholder="Jawab likhein…"></textarea><button class="send" onclick="reply()">➤</button></div></div>
+    </div>
+  </main>
+</section>
+
+<div id="modal"></div>
+
+<script>
+/* ======== Apne naye Firebase project ki config yahan paste karein ======== */
+const FB={apiKey: "AIzaSyAGH4qrPzxelhM0KUM1nBNfLBUZ2ABlmcs",
+  authDomain: "baatlink.firebaseapp.com",
+  projectId: "baatlink",
+  storageBucket: "baatlink.firebasestorage.app",
+  messagingSenderId: "375018345453",
+  appId: "1:375018345453:web:6e4620fcdb2d334f1c4de4"
+};
+
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const LS={g:(k,d)=>{try{const v=localStorage.getItem('bl_'+k);return v?JSON.parse(v):d}catch(e){return d}},s:(k,v)=>{try{localStorage.setItem('bl_'+k,JSON.stringify(v))}catch(e){}}};
+const TS=()=>firebase.firestore.FieldValue.serverTimestamp();
+const ms=t=>t&&t.toMillis?t.toMillis():Date.now();
+const tm=t=>new Date(ms(t)).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+const dd=t=>{const d=new Date(ms(t));return d.toDateString()===new Date().toDateString()?tm(t):d.toLocaleDateString([],{day:'numeric',month:'short'})};
+function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2800)}
+function show(id){['cfg','g','login','setup','app'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id))}
+function modal(h){$('#modal').innerHTML='<div class="mb" onclick="if(event.target===this)closeM()"><div class="md">'+h+'</div></div>'}
+function closeM(){$('#modal').innerHTML=''}
+function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.25);o.start();o.stop(a.currentTime+.25)}catch(e){}}
+const isActive=s=>{if(!s)return false;const n=Date.now();return !!((s.paidUntil&&ms(s.paidUntil)>n)||ms(s.createdAt)+14*864e5>n)};
+const SLUG=(new URLSearchParams(location.search).get('c')||'').toLowerCase().replace(/[^a-z0-9-]/g,'');
+let db,auth,seller=null,slug=null;
+
+if(FB.apiKey.startsWith('PASTE'))show('cfg');
+else{firebase.initializeApp(FB);auth=firebase.auth();db=firebase.firestore();SLUG?guestMode():sellerMode()}
+
+function enterSend(el,fn){el.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&matchMedia('(pointer:fine)').matches){e.preventDefault();fn()}})}
+enterSend($('#gi'),()=>gSend());enterSend($('#ci'),()=>reply());
+
+/* ================= BUYER (guest) ================= */
+let chat=null,cid,cref,gname=LS.g('name',''),lastS=0;
+function anon(){return new Promise((res,rej)=>{const un=auth.onAuthStateChanged(u=>{un();u?res(u):auth.signInAnonymously().then(c=>res(c.user)).catch(rej)})})}
+async function guestMode(){
+  show('g');$('#gn').value=gname;
+  try{
+    const u=await anon();
+    const sd=await db.collection('bl_sellers').doc(SLUG).get();
+    if(!sd.exists){$('#gt').textContent='Link sahi nahi';$('#gb').textContent='Yeh link sahi nahi hai.';$('#gb').classList.remove('hide');$('#gi').disabled=$('#gsb').disabled=true;return}
+    seller=sd.data();$('#gt').textContent=seller.name;$('#gav').textContent=seller.name[0].toUpperCase();document.title=seller.name;
+    cid=SLUG+'_'+u.uid;cref=db.collection('bl_chats').doc(cid);
+    cref.onSnapshot(s=>{chat=s.exists?s.data():null;gState();if(chat&&chat.ug)cref.update({ug:0}).catch(()=>{})},e=>console.error(e));
+    cref.collection('msgs').orderBy('ts').onSnapshot(s=>gMsgs(s.docs.map(d=>d.data({serverTimestamps:'estimate'}))),e=>console.error(e));
+  }catch(e){toast('Connection mein masla: '+(e.code||e.message))}
+}
+function gState(){
+  const ok=!!(seller.open&&isActive(seller));let b='',can=true;
+  const lim=chat&&chat.status==='open'?300:3;
+  if(chat&&chat.status==='blocked'){b='Seller ne ye chat band kar di hai.';can=false}
+  else if(!chat&&!ok){b='Seller abhi naye messages nahi le raha.';can=false}
+  else if(chat&&!isActive(seller)){b='Seller abhi available nahi hai.';can=false}
+  else if(chat&&chat.n>=lim){b='Is chat ki hadd poori ho gayi.';can=false}
+  else if(chat&&chat.status==='pending')b='Seller ne abhi dekha nahi. Jawab aane tak aap '+(3-chat.n)+' message aur bhej sakte hain.';
+  $('#gb').textContent=b;$('#gb').classList.toggle('hide',!b);
+  $('#gi').disabled=$('#gsb').disabled=!can;$('#gn').classList.toggle('hide',!!chat);
+}
+function gMsgs(list){
+  const box=$('#gm');let h=seller.greeting?`<div class="b yo">${esc(seller.greeting)}</div>`:'';
+  h+=list.map(m=>`<div class="b ${m.from==='g'?'me':'yo'}">${esc(m.text)}<small>${tm(m.ts)}</small></div>`).join('');
+  box.innerHTML=h;box.scrollTop=box.scrollHeight;
+}
+async function gSend(){
+  const text=$('#gi').value.trim();if(!text||!cref)return;
+  if(Date.now()-lastS<1500)return toast('Thora ruk kar bhejein');lastS=Date.now();
+  const nm=($('#gn').value.trim()||gname||'Mehmaan').slice(0,24);gname=nm;LS.s('name',nm);
+  const b=db.batch(),last=text.slice(0,60);
+  if(!chat)b.set(cref,{slug:SLUG,guest:auth.currentUser.uid,gname:nm,status:'pending',last,lastAt:TS(),n:1,us:1,ug:0,createdAt:TS()});
+  else b.update(cref,{gname:nm,last,lastAt:TS(),n:chat.n+1,us:(chat.us||0)+1});
+  b.set(cref.collection('msgs').doc(),{from:'g',text,ts:TS()});
+  $('#gi').value='';
+  try{await b.commit()}catch(e){$('#gi').value=text;toast(e.code==='permission-denied'?'Message nahi gaya (chat band hai ya hadd poori)':'Error: '+(e.code||e.message))}
+}
+
+/* ================= SELLER ================= */
+let chats={},tab='req',cur=null,unM=null,lastUn=0;
+const link=()=>location.origin+location.pathname+'?c='+slug;
+const QR=()=>LS.g('qr',['Ji, batayein?','Price bata deta hoon','Delivery 3 din mein hogi']);
+function sellerMode(){
+  show('login');
+  auth.onAuthStateChanged(async u=>{
+    if(!u||u.isAnonymous){show('login');return}
+    try{
+      const q=await db.collection('bl_sellers').where('uid','==',u.uid).limit(1).get();
+      if(q.empty){show('setup');return}
+      slug=q.docs[0].id;seller=q.docs[0].data();startDash();
+    }catch(e){toast('Error: '+(e.code||e.message))}
+  });
+}
+function glogin(){auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()).catch(e=>toast(e.code==='auth/popup-closed-by-user'?'Cancel kiya':'Login fail: '+(e.code||e.message)))}
+async function mkSeller(){
+  const name=$('#stn').value.trim(),id=$('#sti').value;
+  if(name.length<2)return toast('Naam likhein');if(id.length<3)return toast('Link ID kam az kam 3 harf ki ho');
+  try{
+    const ref=db.collection('bl_sellers').doc(id);
+    await ref.set({uid:auth.currentUser.uid,name,open:true,greeting:'Assalam o Alaikum! Batayein, main aap ki kya madad kar sakta hoon?',createdAt:TS()});
+    slug=id;seller=(await ref.get()).data();startDash();
+  }catch(e){toast(e.code==='permission-denied'?'Yeh link ID pehle se kisi ke paas hai':'Error: '+(e.code||e.message))}
+}
+function startDash(){
+  show('app');$('#sn').textContent=seller.name;$('#sav').textContent=seller.name[0].toUpperCase();$('#lk').textContent=link();planUI();
+  db.collection('bl_chats').where('slug','==',slug).onSnapshot(s=>{
+    chats={};s.docs.forEach(d=>chats[d.id]={id:d.id,...d.data({serverTimestamps:'estimate'})});
+    const un=Object.values(chats).reduce((a,c)=>a+(c.us||0),0);
+    if(un>lastUn)beep();lastUn=un;document.title=(un?'('+un+') ':'')+'BaatLink';
+    renderList();if(cur&&chats[cur]){cvHead();if(chats[cur].us&&!document.hidden)markRead()}
+  },e=>toast('Chats load nahi hui: '+(e.code||e.message)));
+}
+function planUI(){
+  const paid=seller.paidUntil&&ms(seller.paidUntil)>Date.now(),left=Math.ceil((ms(seller.createdAt)+14*864e5-Date.now())/864e5);
+  $('#sp').textContent=paid?'Paid • '+new Date(ms(seller.paidUntil)).toLocaleDateString():left>0?'Free trial • '+left+' din baqi':'⚠️ Plan khatam';
+  $('#warn').classList.toggle('hide',isActive(seller));
+}
+function setTab(t){tab=t;['req','chat','blk'].forEach(x=>$('#t_'+x).classList.toggle('on',x===t));renderList()}
+function renderList(){
+  const a=Object.values(chats),g={req:a.filter(c=>c.status==='pending'),chat:a.filter(c=>c.status==='open'),blk:a.filter(c=>c.status==='blocked')};
+  $('#tr').textContent=g.req.length;$('#tc').textContent=g.chat.length;$('#tb').textContent=g.blk.length;
+  const l=g[tab].sort((x,y)=>ms(y.lastAt)-ms(x.lastAt));
+  $('#cl').innerHTML=l.length?l.map(c=>`<div class="ci ${cur===c.id?'on':''}" onclick="openC('${c.id}')"><div class="av">${esc((c.gname||'M')[0].toUpperCase())}</div><div class="cm"><div class="r2"><b>${esc(c.gname||'Mehmaan')}</b><small>${dd(c.lastAt)}</small></div><div class="r2"><span class="lt">${esc(c.last||'')}</span>${c.us?`<span class="bd">${c.us}</span>`:''}</div></div></div>`).join(''):'<div class="empty">'+(tab==='req'?'Koi nayi request nahi.<br>Apna link share karein.':'Yahan abhi kuch nahi.')+'</div>';
+}
+function openC(id){
+  cur=id;$('#app').classList.add('open');$('#np').classList.add('hide');$('#cv').classList.remove('hide');cvHead();
+  if(unM)unM();
+  unM=db.collection('bl_chats').doc(id).collection('msgs').orderBy('ts').onSnapshot(s=>{
+    const box=$('#cm');box.innerHTML=s.docs.map(d=>{const m=d.data({serverTimestamps:'estimate'});return `<div class="b ${m.from==='s'?'me':'yo'}">${esc(m.text)}<small>${tm(m.ts)}</small></div>`}).join('');box.scrollTop=box.scrollHeight;
+  },e=>toast('Messages load nahi hue'));
+  $('#qrs').innerHTML=QR().map((q,i)=>`<button onclick="reply(QR()[${i}])">${esc(q)}</button>`).join('');
+  renderList();markRead();
+}
+function closeC(){cur=null;if(unM){unM();unM=null}$('#app').classList.remove('open');$('#cv').classList.add('hide');$('#np').classList.remove('hide');renderList()}
+function markRead(){const c=chats[cur];if(c&&c.us)db.collection('bl_chats').doc(cur).update({us:0}).catch(()=>{})}
+function cvHead(){
+  const c=chats[cur];if(!c)return;$('#cn').textContent=c.gname||'Mehmaan';$('#cav').textContent=(c.gname||'M')[0].toUpperCase();
+  let a=c.status==='pending'?`<button class="btn" onclick="setSt('open')">✅ Accept</button><button class="btn g" onclick="setSt('blocked')">🚫</button>`:c.status==='open'?`<button class="btn g" onclick="setSt('blocked')">🚫 Block</button>`:`<button class="btn" onclick="setSt('open')">Unblock</button>`;
+  $('#ca').innerHTML=a+`<button class="btn g" onclick="delC()">🗑️</button>`;$('#ci').disabled=c.status==='blocked';
+}
+async function reply(txt){
+  const c=chats[cur];if(!c||c.status==='blocked')return;const text=(txt||$('#ci').value).trim();if(!text)return;
+  const cr=db.collection('bl_chats').doc(cur),b=db.batch();
+  b.set(cr.collection('msgs').doc(),{from:'s',text,ts:TS()});
+  b.update(cr,{last:text.slice(0,60),lastAt:TS(),ug:(c.ug||0)+1,status:'open'});
+  try{await b.commit();$('#ci').value=''}catch(e){toast('Nahi gaya: '+(e.code||e.message))}
+}
+async function setSt(s){try{await db.collection('bl_chats').doc(cur).update({status:s});if(s==='blocked')toast('Buyer block ho gaya')}catch(e){toast('Error: '+(e.code||e.message))}}
+async function delC(){
+  if(!confirm('Yeh chat hamesha ke liye delete karein?'))return;
+  try{const cr=db.collection('bl_chats').doc(cur),ms_=await cr.collection('msgs').get(),b=db.batch();ms_.forEach(d=>b.delete(d.ref));b.delete(cr);await b.commit();closeC()}catch(e){toast('Delete fail: '+(e.code||e.message))}
+}
+function copyL(){navigator.clipboard.writeText(link()).then(()=>toast('Link copy ho gaya ✅'))}
+function shareL(){window.open('https://wa.me/?text='+encodeURIComponent('Mujhe yahan message karein (number ki zaroorat nahi): '+link()),'_blank')}
+function qr(){modal(`<h2>QR code</h2><div style="text-align:center"><img alt="QR" width="220" height="220" style="border-radius:12px;background:#fff;padding:8px" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(link())}"><p class="hint" style="margin:10px 0">Is par screenshot le kar poster ya bill par laga sakte hain.</p></div><button class="btn g w" onclick="closeM()">Close</button>`)}
+function settings(){
+  modal(`<h2>⚙️ Settings</h2><label>Dukaan ka naam</label><input id="sa" value="${esc(seller.name)}" maxlength="30">
+  <label>Pehla jawab (greeting)</label><textarea id="sb" rows="3" maxlength="200">${esc(seller.greeting||'')}</textarea>
+  <label class="chk"><input type="checkbox" id="sc" ${seller.open?'checked':''}> Naye buyers ko allow karein</label>
+  <label>Quick replies (comma se alag)</label><input id="sq" value="${esc(QR().join(', '))}">
+  <button class="btn w" onclick="saveS()">Save</button><button class="btn g w" onclick="auth.signOut().then(()=>location.reload())">Logout</button><button class="btn g w" onclick="closeM()">Close</button>`);
+}
+async function saveS(){
+  const name=$('#sa').value.trim(),greeting=$('#sb').value.trim(),open=$('#sc').checked;
+  if(name.length<2)return toast('Naam likhein');
+  try{await db.collection('bl_sellers').doc(slug).update({name,greeting,open});Object.assign(seller,{name,greeting,open});LS.s('qr',$('#sq').value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,8));
+    $('#sn').textContent=name;$('#sav').textContent=name[0].toUpperCase();closeM();toast('Save ho gaya ✅');if(cur)openC(cur)}
+  catch(e){toast('Save fail: '+(e.code||e.message))}
+}
+</script>
+</body>
+</html>
+ 
