@@ -12,11 +12,11 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 :root{--bg:#f4f5fb;--cd:#fff;--tx:#14172b;--dim:#6b7280;--ac:#4f46e5;--as:#eceafe;--bd:#e6e8f0;--dg:#e11d48;color-scheme:light}
-:root.dark{--bg:#0c0e1d;--cd:#151832;--tx:#eef0ff;--dim:#9aa0c3;--as:#23275a;--bd:#262a52;color-scheme:dark}
+@media(prefers-color-scheme:dark){:root{--bg:#0c0e1d;--cd:#151832;--tx:#eef0ff;--dim:#9aa0c3;--as:#23275a;--bd:#262a52;color-scheme:dark}}
 html,body{height:100%}
-body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top);transition:background .2s,color .2s}
+body{background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top)}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
-input,textarea{font:inherit;color:inherit;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;width:100%;outline:0;resize:none;margin-bottom:10px;transition:background .2s,border-color .2s}
+input,textarea{font:inherit;color:inherit;background:var(--cd);border:1px solid var(--bd);border-radius:12px;padding:11px 14px;width:100%;outline:0;resize:none;margin-bottom:10px}
 input:focus,textarea:focus{border-color:var(--ac)}
 label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weight:600}
 .chk{display:flex;gap:8px;align-items:center;font-size:14px;color:var(--tx);margin:6px 0 12px}.chk input{width:auto;margin:0}
@@ -27,7 +27,7 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .card h1{font-size:24px;margin-bottom:4px}.card p{color:var(--dim);margin-bottom:16px}
 .center{min-height:100dvh;display:grid;place-items:center;padding:20px;text-align:center}
 .av{width:42px;height:42px;border-radius:50%;background:var(--ac);color:#fff;display:grid;place-items:center;font-weight:700;flex-shrink:0}
-.top{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--cd);border-bottom:1px solid var(--bd);flex-shrink:0;transition:background .2s,border-color .2s}
+.top{display:flex;gap:12px;align-items:center;padding:12px 16px;background:var(--cd);border-bottom:1px solid var(--bd);flex-shrink:0}
 .top small{display:block;color:var(--dim);font-size:12.5px}
 .col{display:flex;flex-direction:column;height:100dvh;max-width:640px;margin:0 auto;background:var(--bg)}
 .msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:6px;min-height:0}
@@ -35,15 +35,14 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .b.me{align-self:flex-end;background:var(--ac);color:#fff;border-bottom-right-radius:4px}
 .b.yo{align-self:flex-start;background:var(--cd);border:1px solid var(--bd);border-bottom-left-radius:4px}
 .b small{display:block;font-size:11px;opacity:.65;text-align:right;margin-top:2px}
-.bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--cd);border-top:1px solid var(--bd);flex-shrink:0;transition:background .2s}
+.bar{padding:10px 12px calc(10px + env(safe-area-inset-bottom));background:var(--cd);border-top:1px solid var(--bd);flex-shrink:0}
 .bar input,.bar textarea{margin:0}
 .row{display:flex;gap:8px;align-items:flex-end}
 .send{background:var(--ac);color:#fff;width:44px;height:44px;border-radius:50%;flex-shrink:0;font-size:18px}.send:disabled{opacity:.4}
 .banner{background:var(--as);color:var(--ac);padding:9px 14px;font-size:13px;flex-shrink:0}.banner.w{background:#fee2e2;color:#b91c1c}
-:root.dark .banner.w{background:#3b0d15;color:#fca5a5}
 .hint{font-size:11.5px;color:var(--dim);text-align:center;margin-top:6px}
 #app{display:grid;grid-template-columns:380px 1fr;height:100dvh}
-.side{display:flex;flex-direction:column;background:var(--cd);border-right:1px solid var(--bd);min-height:0;transition:background .2s,border-color .2s}
+.side{display:flex;flex-direction:column;background:var(--cd);border-right:1px solid var(--bd);min-height:0}
 .pane{display:flex;flex-direction:column;min-height:0;background:var(--bg)}
 .lk{padding:12px 16px;border-bottom:1px solid var(--bd)}.lkt{font-size:13px;background:var(--as);color:var(--ac);padding:8px 12px;border-radius:10px;word-break:break-all}
 .lk .row{margin-top:8px}.lk .btn{padding:8px 12px;font-size:13.5px}
@@ -62,15 +61,9 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .mb{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:grid;place-items:center;padding:16px}
 .md{background:var(--cd);border-radius:20px;padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}.md h2{margin-bottom:12px}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:12px;z-index:99;max-width:90vw;font-size:14px}
-/* Dark mode toggle button */
-.themeBtn{position:fixed;top:calc(8px + env(safe-area-inset-top));right:8px;z-index:60;background:var(--cd);border:1px solid var(--bd);width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-.themeBtn:hover{background:var(--as)}
-@media(max-width:800px){.themeBtn{top:auto;bottom:calc(16px + env(safe-area-inset-bottom));right:16px}}
 </style>
 </head>
 <body>
-
-<button class="themeBtn" id="themeBtn" onclick="toggleTheme()" title="Theme badlein">🌙</button>
 
 <section id="cfg" class="center hide"><div class="card"><h1>⚙️ Setup baqi hai</h1><p>index.html mein <b>const FB</b> ke andar apne naye Firebase project ki config paste karein.</p></div></section>
 
@@ -88,7 +81,7 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 <section id="login" class="center hide"><div class="card">
   <h1>💬 BaatLink</h1><p>Apna chat link banayein. Buyer bina number aur bina app ke aap ko message kar sakta hai.</p>
   <button class="btn w" onclick="glogin()">Google se login karein</button>
-  <div class="hint" style="margin-top:14px">Pehle 14 din free</div>
+  <div class="hint" style="margin-top:14px">Bilkul free — abhi ke liye</div>
 </div></section>
 
 <section id="setup" class="center hide"><div class="card" style="text-align:left">
@@ -101,7 +94,6 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 <section id="app" class="hide">
   <aside class="side">
     <div class="top"><div class="av" id="sav"></div><div style="flex:1;min-width:0"><b id="sn"></b><small id="sp"></small></div><button class="btn g" onclick="settings()">⚙️</button></div>
-    <div id="warn" class="banner w hide">Plan khatam ho gaya: naye buyers message nahi bhej sakte. Renew ke liye rabta karein.</div>
     <div class="lk"><div class="lkt" id="lk"></div><div class="row"><button class="btn g" onclick="copyL()">📋 Copy</button><button class="btn g" onclick="shareL()">💬 WhatsApp</button><button class="btn g" onclick="qr()">QR</button></div></div>
     <div class="tabs"><button id="t_req" class="on" onclick="setTab('req')">Requests<i id="tr">0</i></button><button id="t_chat" onclick="setTab('chat')">Chats<i id="tc">0</i></button><button id="t_blk" onclick="setTab('blk')">Blocked<i id="tb">0</i></button></div>
     <div id="cl" class="cl"></div>
@@ -129,25 +121,6 @@ const FB={apiKey: "AIzaSyAGH4qrPzxelhM0KUM1nBNfLBUZ2ABlmcs",
   appId: "1:375018345453:web:6e4620fcdb2d334f1c4de4"
 };
 
-/* ================= THEME ================= */
-(function(){
-  const saved=localStorage.getItem('bl_theme');
-  const prefersDark=window.matchMedia&&window.matchMedia('(prefers-color-scheme:dark)').matches;
-  const isDark = saved ? saved==='dark' : prefersDark;
-  if(isDark) document.documentElement.classList.add('dark');
-  document.addEventListener('DOMContentLoaded',()=>{
-    const b=document.getElementById('themeBtn');
-    if(b) b.textContent=isDark?'☀️':'🌙';
-  });
-})();
-function toggleTheme(){
-  const root=document.documentElement;
-  const nowDark=root.classList.toggle('dark');
-  localStorage.setItem('bl_theme', nowDark?'dark':'light');
-  const b=document.getElementById('themeBtn');
-  if(b) b.textContent=nowDark?'☀️':'🌙';
-}
-
 /* ================= HELPERS ================= */
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -161,10 +134,9 @@ function show(id){['cfg','g','login','setup','app'].forEach(x=>$('#'+x).classLis
 function modal(h){$('#modal').innerHTML='<div class="mb" onclick="if(event.target===this)closeM()"><div class="md">'+h+'</div></div>'}
 function closeM(){$('#modal').innerHTML=''}
 function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.25);o.start();o.stop(a.currentTime+.25)}catch(e){}}
-const isActive=s=>{if(!s)return false;const n=Date.now();return !!((s.paidUntil&&ms(s.paidUntil)>n)||ms(s.createdAt)+14*864e5>n)};
 const SLUG=(new URLSearchParams(location.search).get('c')||'').toLowerCase().replace(/[^a-z0-9-]/g,'');
 
-/* ================= STATE (TDZ FIX: pehle declare karein) ================= */
+/* ================= STATE (TDZ FIX) ================= */
 let db,auth,seller=null,slug=null;
 let chat=null,cid,cref,gname=LS.g('name',''),lastS=0;   // buyer
 let chats={},tab='req',cur=null,unM=null,lastUn=0;      // seller
@@ -193,11 +165,11 @@ async function guestMode(){
 }
 
 function gState(){
-  const ok=!!(seller.open&&isActive(seller));let b='',can=true;
+  // Trial/plan hata diya — sirf seller.open check
+  const ok=!!seller.open;let b='',can=true;
   const lim=chat&&chat.status==='open'?300:3;
   if(chat&&chat.status==='blocked'){b='Seller ne ye chat band kar di hai.';can=false}
   else if(!chat&&!ok){b='Seller abhi naye messages nahi le raha.';can=false}
-  else if(chat&&!isActive(seller)){b='Seller abhi available nahi hai.';can=false}
   else if(chat&&chat.n>=lim){b='Is chat ki hadd poori ho gayi.';can=false}
   else if(chat&&chat.status==='pending')b='Seller ne abhi dekha nahi. Jawab aane tak aap '+(3-chat.n)+' message aur bhej sakte hain.';
   $('#gb').textContent=b;$('#gb').classList.toggle('hide',!b);
@@ -221,7 +193,6 @@ async function gSend(){
 
   try{
     if(!chat){
-      // Step 1: pehle chat document create karo
       await cref.set({
         slug:SLUG,
         guest:auth.currentUser.uid,
@@ -235,7 +206,6 @@ async function gSend(){
         createdAt:TS()
       });
     } else {
-      // Step 1: chat update karo
       await cref.update({
         gname:nm,
         last:text.slice(0,60),
@@ -244,7 +214,6 @@ async function gSend(){
         us:(chat.us||0)+1
       });
     }
-    // Step 2: ab message bhejo (chat exist karti hai)
     await cref.collection('msgs').add({
       from:'g',
       text,
@@ -286,19 +255,14 @@ async function mkSeller(){
 }
 
 function startDash(){
-  show('app');$('#sn').textContent=seller.name;$('#sav').textContent=seller.name[0].toUpperCase();$('#lk').textContent=link();planUI();
+  show('app');$('#sn').textContent=seller.name;$('#sav').textContent=seller.name[0].toUpperCase();$('#lk').textContent=link();
+  $('#sp').textContent='Free';
   db.collection('bl_chats').where('slug','==',slug).onSnapshot(s=>{
     chats={};s.docs.forEach(d=>chats[d.id]={id:d.id,...d.data({serverTimestamps:'estimate'})});
     const un=Object.values(chats).reduce((a,c)=>a+(c.us||0),0);
     if(un>lastUn)beep();lastUn=un;document.title=(un?'('+un+') ':'')+'BaatLink';
     renderList();if(cur&&chats[cur]){cvHead();if(chats[cur].us&&!document.hidden)markRead()}
   },e=>toast('Chats load nahi hui: '+(e.code||e.message)));
-}
-
-function planUI(){
-  const paid=seller.paidUntil&&ms(seller.paidUntil)>Date.now(),left=Math.ceil((ms(seller.createdAt)+14*864e5-Date.now())/864e5);
-  $('#sp').textContent=paid?'Paid • '+new Date(ms(seller.paidUntil)).toLocaleDateString():left>0?'Free trial • '+left+' din baqi':'⚠️ Plan khatam';
-  $('#warn').classList.toggle('hide',isActive(seller));
 }
 
 function setTab(t){tab=t;['req','chat','blk'].forEach(x=>$('#t_'+x).classList.toggle('on',x===t));renderList()}
