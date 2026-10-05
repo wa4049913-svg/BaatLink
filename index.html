@@ -177,15 +177,52 @@ function gMsgs(list){
   box.innerHTML=h;box.scrollTop=box.scrollHeight;
 }
 async function gSend(){
-  const text=$('#gi').value.trim();if(!text||!cref)return;
-  if(Date.now()-lastS<1500)return toast('Thora ruk kar bhejein');lastS=Date.now();
-  const nm=($('#gn').value.trim()||gname||'Mehmaan').slice(0,24);gname=nm;LS.s('name',nm);
-  const b=db.batch(),last=text.slice(0,60);
-  if(!chat)b.set(cref,{slug:SLUG,guest:auth.currentUser.uid,gname:nm,status:'pending',last,lastAt:TS(),n:1,us:1,ug:0,createdAt:TS()});
-  else b.update(cref,{gname:nm,last,lastAt:TS(),n:chat.n+1,us:(chat.us||0)+1});
-  b.set(cref.collection('msgs').doc(),{from:'g',text,ts:TS()});
-  $('#gi').value='';
-  try{await b.commit()}catch(e){$('#gi').value=text;toast(e.code==='permission-denied'?'Message nahi gaya (chat band hai ya hadd poori)':'Error: '+(e.code||e.message))}
+  const text=$('#gi').value.trim();
+  if(!text||!cref)return;
+  if(Date.now()-lastS<1500)return toast('Thora ruk kar bhejein');
+  lastS=Date.now();
+
+  const nm=($('#gn').value.trim()||gname||'Mehmaan').slice(0,24);
+  gname=nm; LS.s('name',nm);
+
+  try{
+    if(!chat){
+      // Step 1: pehle chat document create karo
+      await cref.set({
+        slug:SLUG,
+        guest:auth.currentUser.uid,
+        gname:nm,
+        status:'pending',
+        last:text.slice(0,60),
+        lastAt:TS(),
+        n:1,
+        us:1,
+        ug:0,
+        createdAt:TS()
+      });
+    } else {
+      // Step 1: chat update karo
+      await cref.update({
+        gname:nm,
+        last:text.slice(0,60),
+        lastAt:TS(),
+        n:(chat.n||0)+1,
+        us:(chat.us||0)+1
+      });
+    }
+
+    // Step 2: ab message bhejo (chat exist karti hai)
+    await cref.collection('msgs').add({
+      from:'g',
+      text,
+      ts:TS()
+    });
+
+    $('#gi').value='';
+  }catch(e){
+    console.error('gSend fail:', e);
+    toast('Message nahi gaya: '+(e.code||e.message));
+  }
 }
 
 /* ================= SELLER ================= */
