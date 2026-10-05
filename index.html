@@ -59,7 +59,6 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .cm small{color:var(--dim);font-size:12px}.lt{color:var(--dim);font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .bd{background:var(--ac);color:#fff;border-radius:10px;min-width:20px;height:20px;display:grid;place-items:center;font-size:12px;font-weight:700;padding:0 6px}
 .empty{padding:40px 24px;text-align:center;color:var(--dim)}
-.qr{display:flex;gap:6px;overflow-x:auto;padding:8px 12px 0}.qr button{flex-shrink:0;background:var(--as);color:var(--ac);padding:6px 12px;border-radius:14px;font-size:13px}
 .acts{display:flex;gap:6px}.acts .btn{padding:8px 12px;font-size:13.5px}
 .back{display:none;font-size:22px;padding:0 6px}
 @media(max-width:800px){#app{grid-template-columns:1fr}#app.open .side{display:none}#app:not(.open) .pane{display:none}.back{display:block}}
@@ -113,8 +112,18 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
       <button class="btn g hide" id="installBtn" onclick="installApp()" title="App install karein">📲</button>
       <button class="btn g" onclick="settings()">⚙️</button>
     </div>
-    <div class="lk"><div class="lkt" id="lk"></div><div class="row"><button class="btn g" onclick="copyL()">📋 Copy</button><button class="btn g" onclick="shareL()">💬 WhatsApp</button><button class="btn g" onclick="qr()">QR</button></div></div>
-    <div class="tabs"><button id="t_req" class="on" onclick="setTab('req')">Requests<i id="tr">0</i></button><button id="t_chat" onclick="setTab('chat')">Chats<i id="tc">0</i></button><button id="t_blk" onclick="setTab('blk')">Blocked<i id="tb">0</i></button></div>
+    <div class="lk">
+      <div class="lkt" id="lk"></div>
+      <div class="row">
+        <button class="btn g" onclick="copyL()">📋 Copy</button>
+        <button class="btn g" onclick="shareL()">💬 WhatsApp</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button id="t_req" class="on" onclick="setTab('req')">Requests<i id="tr">0</i></button>
+      <button id="t_chat" onclick="setTab('chat')">Chats<i id="tc">0</i></button>
+      <button id="t_blk" onclick="setTab('blk')">Blocked<i id="tb">0</i></button>
+    </div>
     <div id="cl" class="cl"></div>
   </aside>
   <main class="pane">
@@ -122,7 +131,6 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
     <div id="cv" class="hide" style="display:flex;flex-direction:column;flex:1;min-height:0">
       <div class="top"><button class="back" onclick="closeC()">←</button><div class="av" id="cav"></div><b id="cn" style="flex:1"></b><div class="acts" id="ca"></div></div>
       <div id="cm" class="msgs"></div>
-      <div class="qr" id="qrs"></div>
       <div class="bar"><div class="row"><textarea id="ci" rows="1" maxlength="500" placeholder="Jawab likhein…"></textarea><button class="send" onclick="reply()">➤</button></div></div>
     </div>
   </main>
@@ -248,7 +256,6 @@ async function gSend(){
 
 /* ================= SELLER ================= */
 const link=()=>location.origin+location.pathname+'?c='+slug;
-const QR=()=>LS.g('qr',['Ji, batayein?','Price bata deta hoon','Delivery 3 din mein hogi']);
 
 function sellerMode(){
   show('loading');
@@ -315,7 +322,6 @@ function openC(id){
   unM=db.collection('bl_chats').doc(id).collection('msgs').orderBy('ts').onSnapshot(s=>{
     const box=$('#cm');box.innerHTML=s.docs.map(d=>{const m=d.data({serverTimestamps:'estimate'});return `<div class="b ${m.from==='s'?'me':'yo'}">${esc(m.text)}<small>${tm(m.ts)}</small></div>`}).join('');box.scrollTop=box.scrollHeight;
   },e=>toast('Messages load nahi hue'));
-  $('#qrs').innerHTML=QR().map((q,i)=>`<button onclick="reply(QR()[${i}])">${esc(q)}</button>`).join('');
   renderList();markRead();
 }
 
@@ -346,20 +352,20 @@ async function delC(){
 
 function copyL(){navigator.clipboard.writeText(link()).then(()=>toast('Link copy ho gaya ✅'))}
 function shareL(){window.open('https://wa.me/?text='+encodeURIComponent('Mujhe yahan message karein (number ki zaroorat nahi): '+link()),'_blank')}
-function qr(){modal(`<h2>QR code</h2><div style="text-align:center"><img alt="QR" width="220" height="220" style="border-radius:12px;background:#fff;padding:8px" src="https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(link())}"><p class="hint" style="margin:10px 0">Is par screenshot le kar poster ya bill par laga sakte hain.</p></div><button class="btn g w" onclick="closeM()">Close</button>`)}
 
 function settings(){
   modal(`<h2>⚙️ Settings</h2><label>Dukaan ka naam</label><input id="sa" value="${esc(seller.name)}" maxlength="30">
   <label>Pehla jawab (greeting)</label><textarea id="sb" rows="3" maxlength="200">${esc(seller.greeting||'')}</textarea>
   <label class="chk"><input type="checkbox" id="sc" ${seller.open?'checked':''}> Naye buyers ko allow karein</label>
-  <label>Quick replies (comma se alag)</label><input id="sq" value="${esc(QR().join(', '))}">
-  <button class="btn w" onclick="saveS()">Save</button><button class="btn g w" onclick="auth.signOut().then(()=>location.reload())">Logout</button><button class="btn g w" onclick="closeM()">Close</button>`);
+  <button class="btn w" onclick="saveS()">Save</button>
+  <button class="btn g w" onclick="auth.signOut().then(()=>location.reload())">Logout</button>
+  <button class="btn g w" onclick="closeM()">Close</button>`);
 }
 
 async function saveS(){
   const name=$('#sa').value.trim(),greeting=$('#sb').value.trim(),open=$('#sc').checked;
   if(name.length<2)return toast('Naam likhein');
-  try{await db.collection('bl_sellers').doc(slug).update({name,greeting,open});Object.assign(seller,{name,greeting,open});LS.s('qr',$('#sq').value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,8));
+  try{await db.collection('bl_sellers').doc(slug).update({name,greeting,open});Object.assign(seller,{name,greeting,open});
     $('#sn').textContent=name;$('#sav').textContent=name[0].toUpperCase();closeM();toast('Save ho gaya ✅');if(cur)openC(cur)}
   catch(e){toast('Save fail: '+(e.code||e.message))}
 }
@@ -385,7 +391,6 @@ window.addEventListener('appinstalled', ()=>{
 
 function installApp(){
   if(!deferredPrompt){
-    // iPhone Safari ke liye special hint
     const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
     const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if(isIOS && isSafari){
@@ -402,14 +407,12 @@ function installApp(){
   });
 }
 
-// Service worker register (sirf HTTPS par)
 if('serviceWorker' in navigator && location.protocol==='https:'){
   window.addEventListener('load', ()=>{
     navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW skip:',e.message));
   });
 }
 
-// Agar pehle se installed hai (standalone), button na dikhayein
 if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone){
   setTimeout(()=>{
     const b=document.getElementById('installBtn');
