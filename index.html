@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="BaatLink">
-<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQwIiBmaWxsPSIjNGY0NmU1Ii8+PHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9ImJvbGQiPvCfjr88L3RleHQ+PC9zdmc+">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#4f46e5">
 <meta name="robots" content="noindex,nofollow">
 <title>BaatLink</title>
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="BaatLink">
+<link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxOTIgMTkyIj48cmVjdCB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgcng9IjQwIiBmaWxsPSIjNGY0NmU1Ii8+PHRleHQgeD0iOTYiIHk9IjEyMCIgZm9udC1zaXplPSI5MCIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZmlsbD0iI2ZmZiIgZm9udC1mYW1pbHk9InN5c3RlbS11aSIgZm9udC13ZWlnaHQ9ImJvbGQiPvCfjr88L3RleHQ+PC9zdmc+">
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -66,11 +66,20 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 .mb{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:50;display:grid;place-items:center;padding:16px}
 .md{background:var(--cd);border-radius:20px;padding:22px;width:100%;max-width:400px;max-height:90vh;overflow-y:auto}.md h2{margin-bottom:12px}
 .toast{position:fixed;bottom:calc(24px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:12px;z-index:99;max-width:90vw;font-size:14px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{width:44px;height:44px;border:4px solid var(--bd);border-top-color:var(--ac);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 14px}
 </style>
 </head>
 <body>
 
 <section id="cfg" class="center hide"><div class="card"><h1>⚙️ Setup baqi hai</h1><p>index.html mein <b>const FB</b> ke andar apne naye Firebase project ki config paste karein.</p></div></section>
+
+<section id="loading" class="center">
+  <div style="text-align:center">
+    <div class="spinner"></div>
+    <div style="color:var(--dim);font-size:14px">BaatLink load ho raha hai…</div>
+  </div>
+</section>
 
 <section id="g" class="col hide">
   <div class="top"><div class="av" id="gav">?</div><div><b id="gt"></b><small>Seller se seedha message karein</small></div></div>
@@ -98,7 +107,12 @@ label{display:block;font-size:12.5px;color:var(--dim);margin:2px 0 5px;font-weig
 
 <section id="app" class="hide">
   <aside class="side">
-    <div class="top"><div class="av" id="sav"></div><div style="flex:1;min-width:0"><b id="sn"></b><small id="sp"></small></div><button class="btn g" onclick="settings()">⚙️</button></div>
+    <div class="top">
+      <div class="av" id="sav"></div>
+      <div style="flex:1;min-width:0"><b id="sn"></b><small id="sp"></small></div>
+      <button class="btn g hide" id="installBtn" onclick="installApp()" title="App install karein">📲</button>
+      <button class="btn g" onclick="settings()">⚙️</button>
+    </div>
     <div class="lk"><div class="lkt" id="lk"></div><div class="row"><button class="btn g" onclick="copyL()">📋 Copy</button><button class="btn g" onclick="shareL()">💬 WhatsApp</button><button class="btn g" onclick="qr()">QR</button></div></div>
     <div class="tabs"><button id="t_req" class="on" onclick="setTab('req')">Requests<i id="tr">0</i></button><button id="t_chat" onclick="setTab('chat')">Chats<i id="tc">0</i></button><button id="t_blk" onclick="setTab('blk')">Blocked<i id="tb">0</i></button></div>
     <div id="cl" class="cl"></div>
@@ -135,7 +149,7 @@ const ms=t=>t&&t.toMillis?t.toMillis():Date.now();
 const tm=t=>new Date(ms(t)).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
 const dd=t=>{const d=new Date(ms(t));return d.toDateString()===new Date().toDateString()?tm(t):d.toLocaleDateString([],{day:'numeric',month:'short'})};
 function toast(m){const e=document.createElement('div');e.className='toast';e.textContent=m;document.body.appendChild(e);setTimeout(()=>e.remove(),2800)}
-function show(id){['cfg','g','login','setup','app'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id))}
+function show(id){['cfg','g','loading','login','setup','app'].forEach(x=>$('#'+x).classList.toggle('hide',x!==id))}
 function modal(h){$('#modal').innerHTML='<div class="mb" onclick="if(event.target===this)closeM()"><div class="md">'+h+'</div></div>'}
 function closeM(){$('#modal').innerHTML=''}
 function beep(){try{const a=new (window.AudioContext||window.webkitAudioContext)(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.frequency.value=880;g.gain.setValueAtTime(.12,a.currentTime);g.gain.exponentialRampToValueAtTime(.001,a.currentTime+.25);o.start();o.stop(a.currentTime+.25)}catch(e){}}
@@ -170,7 +184,6 @@ async function guestMode(){
 }
 
 function gState(){
-  // Trial/plan hata diya — sirf seller.open check
   const ok=!!seller.open;let b='',can=true;
   const lim=chat&&chat.status==='open'?300:3;
   if(chat&&chat.status==='blocked'){b='Seller ne ye chat band kar di hai.';can=false}
@@ -197,7 +210,8 @@ async function gSend(){
   gname=nm; LS.s('name',nm);
 
   try{
-    if(!chat){
+    const snap=await cref.get();
+    if(!snap.exists){
       await cref.set({
         slug:SLUG,
         guest:auth.currentUser.uid,
@@ -211,12 +225,13 @@ async function gSend(){
         createdAt:TS()
       });
     } else {
+      const d=snap.data();
       await cref.update({
         gname:nm,
         last:text.slice(0,60),
         lastAt:TS(),
-        n:(chat.n||0)+1,
-        us:(chat.us||0)+1
+        n:(d.n||0)+1,
+        us:(d.us||0)+1
       });
     }
     await cref.collection('msgs').add({
@@ -236,14 +251,26 @@ const link=()=>location.origin+location.pathname+'?c='+slug;
 const QR=()=>LS.g('qr',['Ji, batayein?','Price bata deta hoon','Delivery 3 din mein hogi']);
 
 function sellerMode(){
-  show('login');
+  show('loading');
   auth.onAuthStateChanged(async u=>{
-    if(!u||u.isAnonymous){show('login');return}
+    if(!u||u.isAnonymous){
+      show('login');
+      return;
+    }
     try{
       const q=await db.collection('bl_sellers').where('uid','==',u.uid).limit(1).get();
-      if(q.empty){show('setup');return}
-      slug=q.docs[0].id;seller=q.docs[0].data();startDash();
-    }catch(e){toast('Error: '+(e.code||e.message))}
+      if(q.empty){
+        show('setup');
+        return;
+      }
+      slug=q.docs[0].id;
+      seller=q.docs[0].data();
+      startDash();
+    }catch(e){
+      console.error('sellerMode error:',e);
+      toast('Error: '+(e.code||e.message));
+      show('login');
+    }
   });
 }
 
@@ -260,7 +287,10 @@ async function mkSeller(){
 }
 
 function startDash(){
-  show('app');$('#sn').textContent=seller.name;$('#sav').textContent=seller.name[0].toUpperCase();$('#lk').textContent=link();
+  show('app');
+  $('#sn').textContent=seller.name;
+  $('#sav').textContent=seller.name[0].toUpperCase();
+  $('#lk').textContent=link();
   $('#sp').textContent='Free';
   db.collection('bl_chats').where('slug','==',slug).onSnapshot(s=>{
     chats={};s.docs.forEach(d=>chats[d.id]={id:d.id,...d.data({serverTimestamps:'estimate'})});
@@ -309,7 +339,8 @@ async function reply(txt){
 async function setSt(s){try{await db.collection('bl_chats').doc(cur).update({status:s});if(s==='blocked')toast('Buyer block ho gaya')}catch(e){toast('Error: '+(e.code||e.message))}}
 
 async function delC(){
-  if(!confirm('Yeh chat hamesha ke liye delete karein?'))return;
+  if(!confirm('⚠️ Yeh chat hamesha ke liye delete karein?'))return;
+  if(!confirm('⚠️ PUKKAH? Message wapas nahi aayenge!'))return;
   try{const cr=db.collection('bl_chats').doc(cur),ms_=await cr.collection('msgs').get(),b=db.batch();ms_.forEach(d=>b.delete(d.ref));b.delete(cr);await b.commit();closeC()}catch(e){toast('Delete fail: '+(e.code||e.message))}
 }
 
@@ -331,6 +362,59 @@ async function saveS(){
   try{await db.collection('bl_sellers').doc(slug).update({name,greeting,open});Object.assign(seller,{name,greeting,open});LS.s('qr',$('#sq').value.split(',').map(x=>x.trim()).filter(Boolean).slice(0,8));
     $('#sn').textContent=name;$('#sav').textContent=name[0].toUpperCase();closeM();toast('Save ho gaya ✅');if(cur)openC(cur)}
   catch(e){toast('Save fail: '+(e.code||e.message))}
+}
+
+/* ================= PWA INSTALL ================= */
+let deferredPrompt=null;
+
+window.addEventListener('beforeinstallprompt', e=>{
+  e.preventDefault();
+  deferredPrompt=e;
+  if(seller && !SLUG){
+    const b=document.getElementById('installBtn');
+    if(b) b.classList.remove('hide');
+  }
+});
+
+window.addEventListener('appinstalled', ()=>{
+  deferredPrompt=null;
+  const b=document.getElementById('installBtn');
+  if(b) b.classList.add('hide');
+  toast('App install ho gayi ✅');
+});
+
+function installApp(){
+  if(!deferredPrompt){
+    // iPhone Safari ke liye special hint
+    const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent);
+    const isSafari=/^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if(isIOS && isSafari){
+      toast('Share ➜ "Add to Home Screen" dabayein');
+    } else {
+      toast('Browser menu ➜ "Install app" / "Add to Home Screen"');
+    }
+    return;
+  }
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(c=>{
+    if(c.outcome==='accepted') toast('Install ho raha hai…');
+    deferredPrompt=null;
+  });
+}
+
+// Service worker register (sirf HTTPS par)
+if('serviceWorker' in navigator && location.protocol==='https:'){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').catch(e=>console.log('SW skip:',e.message));
+  });
+}
+
+// Agar pehle se installed hai (standalone), button na dikhayein
+if(window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone){
+  setTimeout(()=>{
+    const b=document.getElementById('installBtn');
+    if(b) b.classList.add('hide');
+  }, 500);
 }
 </script>
 </body>
